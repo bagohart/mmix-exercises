@@ -1,0 +1,68 @@
+                   # long fib(long n) {
+                   #	if (n<2) return 1
+                   #	else return fib(n-2) + fib(n-1)
+                   # }
+                   # ohne Optimierung die stumpfe rekursive Lösung.
+                   # im Buch steht * statt + :)
+                   
+                   # wie die erste Variante, aber mit Registerstack
+                   # statt normalem stack für den unterprogrammaufruf
+                   
+($000)             n		IS		$0
+($001)             test	IS		$1
+($002)             f		IS		$2
+($003)             f1		IS		$3
+($004)             f2		IS		$4
+($005)             retadd	IS		$5
+(0000000000000006) NumLoc	IS		6
+($007)             arg		IS		$7
+($006)             res		IS		$6
+                   
+                   		LOC		#100
+($254=#00000000    		GREG	@
+         00000100)
+                   
+ ...100: fe050004  Fibo	GET		retadd,rJ
+ ...104: 31010002  		CMP		test,n,2	# Rekursionsende?
+ ...108: 4401xxxx  		BP		test,Rek
+ ...10c: e3020001  		SET		f,1
+ ...110: f0xxxxxx  		JMP		Ende
+                   
+ ...114: 25070001  Rek		SUB		arg,n,1	# f(n-1) berechnen
+ ...118: f306fffa  		PUSHJ	$NumLoc,Fibo	# Achtung: überschreibt n. (könnte man ändern)
+ ...11c: c1030600  		SET		f1,res
+                   
+ ...120: 25070002  		SUB		arg,n,2	# f(n-2) berechnen, ginge auch einfacher
+ ...124: f306fff7  		PUSHJ	$NumLoc,Fibo
+ ...128: c1040600  		SET		f2,res
+                   
+ ...12c: 20020304  		ADD		f,f1,f2
+ ...130: f6040005  		PUT		rJ,retadd
+ ...134: f0xxxxxx  		JMP		Ende	# kann man weglassen
+                   
+ ...138: c1000200  Ende	SET		$0,f
+ ...13c: f8010000  		POP		1,0		# nur 1 Rückgabewert, den ich vorher in $0s chreiben muss
+                   					# 1,1,2,3,5,8,13,...
+ ...140: e3010007  Main	SET 	$1,7	# 5 müsste 5 ergeben. für 6 -> 8
+                   		
+ ...144: f300ffef  		PUSHJ	$0,Fibo
+                   
+ ...148: c1030000  		SET		$3,$0	# Ergebnis auslesen
+                   
+ ...14c: 00000000  		TRAP	0,Halt,0
+                   		
+
+Symbol table:
+ Ende = #0000000000000138 (13)
+ Fibo = #0000000000000100 (11)
+ Main = #0000000000000140 (1)
+ NumLoc = #0000000000000006 (8)
+ Rek = #0000000000000114 (12)
+ arg = $007 (9)
+ f = $002 (4)
+ f1 = $003 (5)
+ f2 = $004 (6)
+ n = $000 (2)
+ res = $006 (10)
+ retadd = $005 (7)
+ test = $001 (3)

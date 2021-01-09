@@ -1,0 +1,15 @@
+                   		LOC #100
+($254=#00000000    		GREG	@
+         00000100)
+ ...100: ffffffff  		OCTA	-65536
+ ...104: ffff0000
+                   
+ ...108: 8d01fe00  Main	LDO 	$1,#100
+                   # das war verboten. jetzt so wie erlaubt:
+ ...10c: e3010000  		SET		$1,0
+ ...110: e302ffff  		SET		$2,65535
+ ...114: 24010102  		SUB		$1,$1,$2
+ ...118: 25010101  		SUB		$1,$1,1
+
+Symbol table:
+ Main = #0000000000000108 (1)

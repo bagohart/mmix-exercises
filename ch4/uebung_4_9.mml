@@ -1,0 +1,31 @@
+                   # Collatz Folge landet irgendwann bei eins. Dann kann ich aufhören.
+                   
+($000)             n0		IS		$0
+($001)             ni		IS		$1
+($002)             i		IS		$2
+($003)             test	IS		$3
+                   
+ ...000: e3020000  Main	SET		i,0
+ ...004: e3000007  		SET		n0,7
+ ...008: c1010000  		SET		ni,n0
+ ...00c: 21020201  For		ADD		i,i,1
+ ...010: 31030101  		CMP		test,ni,1
+ ...014: 4203xxxx  		BZ		test,Endfor
+ ...018: 4601xxxx  		BOD		ni,Odd
+ ...01c: 1d010102  Even	DIV		ni,ni,2
+ ...020: f1fffffb  		JMP		For
+ ...024: 19010103  Odd		MUL		ni,ni,3
+ ...028: 21010101  		ADD		ni,ni,1
+ ...02c: f1fffff8  		JMP 	For
+ ...030: 00000000  Endfor	TRAP	0,Halt,0
+
+Symbol table:
+ Endfor = #0000000000000030 (7)
+ Even = #000000000000001c (9)
+ For = #000000000000000c (6)
+ Main = #0000000000000000 (1)
+ Odd = #0000000000000024 (8)
+ i = $002 (4)
+ n0 = $000 (2)
+ ni = $001 (3)
+ test = $003 (5)

@@ -1,0 +1,102 @@
+($003)             i		IS		$3
+($006)             cval	IS		$6
+($007)             max		IS		$7
+($001)             block	IS		$1
+($002)             length	IS		$2
+($000)             raddr	IS		$0
+($005)             offset	IS		$5
+($004)             cmp		IS		$4
+($008)             vecbeg	IS		$8
+($009)             vecba	IS		$9
+                   
+                   		LOC		Data_Segment
+($254=#20000000    		GREG	@
+         00000000)
+2000000000000000:  Data1	OCTA	6
+ ...000: 00000000
+ ...004: 00000006
+ ...008: xxxxxxxx  		OCTA	Vek1
+ ...00c: xxxxxxxx
+ ...010: 00000000  Data2	OCTA	9
+ ...014: 00000009
+ ...018: xxxxxxxx  		OCTA	Vek2
+ ...01c: xxxxxxxx
+ ...020: 00000000  Vek1	OCTA	1,1000,5,17,4,2000,3000
+ ...024: 00000001
+ ...028: 00000000
+ ...02c: 000003e8
+ ...030: 00000000
+ ...034: 00000005
+ ...038: 00000000
+ ...03c: 00000011
+ ...040: 00000000
+ ...044: 00000004
+ ...048: 00000000
+ ...04c: 000007d0
+ ...050: 00000000
+ ...054: 00000bb8
+ ...058: 00000000  Vek2	OCTA	3,2,17,1,9,24,13,12,10
+ ...05c: 00000003
+ ...060: 00000000
+ ...064: 00000002
+ ...068: 00000000
+ ...06c: 00000011
+ ...070: 00000000
+ ...074: 00000001
+ ...078: 00000000
+ ...07c: 00000009
+ ...080: 00000000
+ ...084: 00000018
+ ...088: 00000000
+ ...08c: 0000000d
+ ...090: 00000000
+ ...094: 0000000c
+ ...098: 00000000
+ ...09c: 0000000a
+                   
+                   		LOC		#100
+($253=#00000000    		GREG	@
+         00000100)
+0000000000000100:  MaxVek	LDO		length,block
+ ...100: 8d020100
+ ...104: 23090108  		LDA		vecba,block,8	# vecba enthält jetzt Adresse auf Adresse des Vektors
+ ...108: 8d080900  		LDO		vecbeg,vecba	# das ist der unterschied zu 5.3.a
+ ...10c: e3030000  		SET		i,0 # das könnte man noch 'inlinen', aber naja.
+ ...110: e3070000  		SET		max,0
+ ...114: 30040302  For		CMP		cmp,i,length
+ ...118: 4804xxxx  		BNN		cmp,Return
+ ...11c: 19050308  		MUL		offset,i,8
+ ...120: 8c060805  		LDO		cval,vecbeg,offset
+ ...124: 30040706  		CMP		cmp,max,cval
+ ...128: 60070406  		CSN		max,cmp,cval
+ ...12c: 21030301  		ADD		i,i,1
+ ...130: f1fffff9  		JMP		For
+ ...134: 9f000000  Return	GO		raddr,raddr,0
+                   # max in den block zu schreiben ist einfacher, wenn nicht der
+                   # ganze vektor direkt im block steht!
+                   
+ ...138: 2301fe00  Main	LDA		block,Data1
+ ...13c: 9f00fd00  		GO		raddr,MaxVek
+ ...140: 2301fe10  		LDA		block,Data2
+ ...144: 9f00fd00  		GO		raddr,MaxVek
+ ...148: 00000000  		TRAP	0,Halt,0
+
+Symbol table:
+ Data1 = #2000000000000000 (12)
+ Data2 = #2000000000000010 (14)
+ For = #0000000000000114 (17)
+ Main = #0000000000000138 (1)
+ MaxVek = #0000000000000100 (16)
+ Return = #0000000000000134 (18)
+ Vek1 = #2000000000000020 (13)
+ Vek2 = #2000000000000058 (15)
+ block = $001 (5)
+ cmp = $004 (9)
+ cval = $006 (3)
+ i = $003 (2)
+ length = $002 (6)
+ max = $007 (4)
+ offset = $005 (8)
+ raddr = $000 (7)
+ vecba = $009 (11)
+ vecbeg = $008 (10)

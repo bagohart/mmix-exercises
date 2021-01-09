@@ -1,0 +1,25 @@
+($001)             r		IS		$1
+($002)             m		IS		$2
+($003)             n		IS		$3
+                   
+                   		LOC		#100
+($254=#00000000    		GREG	@
+         00000100)
+ ...100: e30204cc  Main	SET		m,1228
+ ...104: e3030060  		SET		n,96
+ ...108: 1c020203  Start	DIV		m,m,n		# m wird nicht mehr benötigt
+ ...10c: fe010006  		GET		r,rR		
+ ...110: 4201xxxx  		BZ		r,Fertig
+ ...114: c1020300  		SET		m,n
+ ...118: c1030100  		SET		n,r
+ ...11c: 9f00fe08  		GO		$0,Start
+                   
+ ...120: 00000000  Fertig	TRAP	0,Halt,0	# Ergebnis in $3
+
+Symbol table:
+ Fertig = #0000000000000120 (6)
+ Main = #0000000000000100 (1)
+ Start = #0000000000000108 (5)
+ m = $002 (3)
+ n = $003 (4)
+ r = $001 (2)

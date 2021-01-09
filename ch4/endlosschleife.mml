@@ -1,0 +1,5 @@
+                   		LOC		#100
+ ...100: f0000000  Main	JMP		@
+
+Symbol table:
+ Main = #0000000000000100 (1)

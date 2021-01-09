@@ -1,0 +1,25 @@
+($000)             nFak	IS		$0
+($001)             i		IS		$1
+($002)             test	IS		$2
+(0000000000000005) limit	IS		5
+                   
+                   # fakultät. aufwärts zählen, for schleife
+                   
+ ...000: e3010000  Main	SET		i,0
+ ...004: e3000001  		SET		nFak,1
+ ...008: 23010101  For		ADDU	i,i,1
+ ...00c: 25020105  		SUB		test,i,limit
+ ...010: 4402xxxx  		BP		test,End
+ ...014: 18000001  		MUL		nFak,nFak,i
+ ...018: f1fffffc  		JMP		For
+ ...01c: 00000000  End		TRAP	0,Halt,0
+                   		
+
+Symbol table:
+ End = #000000000000001c (7)
+ For = #0000000000000008 (6)
+ Main = #0000000000000000 (1)
+ i = $001 (3)
+ limit = #0000000000000005 (5)
+ nFak = $000 (2)
+ test = $002 (4)

@@ -1,0 +1,25 @@
+                   		LOC		#100
+($000)             z		IS		$0
+($001)             test	IS		$1
+                   
+                   		LOC		#100
+($254=#00000000    		GREG	@
+         00000100)
+ ...100: 5800      X		BYTE	"X",0
+ ...104: e300000b  Main	SET		z,11
+                   #...
+ ...108: 3101000a  		CMP		test,z,10
+ ...10c: 4001xxxx  		BN		test,1F
+ ...110: 2500000a  		SUB		z,z,10
+($253=#00000000    		GREG	@
+         00000114)
+                   #X		BYTE	"h",0 # this is interpreted as an instruction because lol.
+ ...114: 23fffe00  		LDA		$255,X
+ ...118: 00000701  		TRAP	0,Fputs,StdOut
+ ...11c: f0000003  1H		JMP		@+12
+
+Symbol table:
+ Main = #0000000000000104 (1)
+ X = #0000000000000100 (4)
+ test = $001 (3)
+ z = $000 (2)

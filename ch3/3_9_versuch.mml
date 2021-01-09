@@ -1,0 +1,17 @@
+                   		LOC		Data_Segment
+($254=#20000000    		GREG	@
+         00000000)
+                   
+2000000000000000:  String	BYTE	"Text",#A,0
+ ...000: 54657874
+ ...004: 0a00    
+                   
+                   		LOC		#100
+0000000000000100:  Main	LDA		$255,String		Adresse String nach $255
+ ...100: 23fffe00
+ ...104: 00000701  		TRAP	0,Fputs,StdOut	Ausgabe der Zeichenkette
+ ...108: 00000000  		TRAP	0,Halt,0
+
+Symbol table:
+ Main = #0000000000000100 (1)
+ String = #2000000000000000 (2)

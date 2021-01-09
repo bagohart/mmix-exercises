@@ -1,0 +1,63 @@
+($003)             i		IS		$3
+($006)             cval	IS		$6
+($007)             max		IS		$7
+($001)             param	IS		$1
+($002)             length	IS		$2
+($000)             raddr	IS		$0
+($005)             offset	IS		$5
+($004)             cmp		IS		$4
+                   
+                   		LOC		Data_Segment
+($254=#20000000    		GREG	@
+         00000000)
+2000000000000000:  OutBuf	OCTA	1,1000,5,17,4,2000,3000
+ ...000: 00000000
+ ...004: 00000001
+ ...008: 00000000
+ ...00c: 000003e8
+ ...010: 00000000
+ ...014: 00000005
+ ...018: 00000000
+ ...01c: 00000011
+ ...020: 00000000
+ ...024: 00000004
+ ...028: 00000000
+ ...02c: 000007d0
+ ...030: 00000000
+ ...034: 00000bb8
+                   
+                   		LOC		#100
+($253=#00000000    		GREG	@
+         00000100)
+0000000000000100:  MaxVek	SET		i,0 # das könnte man noch 'inlinen', aber naja.
+ ...100: e3030000
+ ...104: e3070000  		SET		max,0
+ ...108: 30040302  For		CMP		cmp,i,length
+ ...10c: 4804xxxx  		BNN		cmp,Return
+ ...110: 19050308  		MUL		offset,i,8
+ ...114: 8c060105  		LDO		cval,param,offset
+ ...118: 30040706  		CMP		cmp,max,cval
+ ...11c: 60070406  		CSN		max,cmp,cval
+ ...120: 21030301  		ADD		i,i,1
+ ...124: f1fffff9  		JMP		For
+ ...128: 9f000000  Return	GO		raddr,raddr,0
+                   
+ ...12c: 2301fe00  Main	LDA		param,OutBuf
+ ...130: e302000a  		SET		length,10
+ ...134: 9f00fd00  		GO		raddr,MaxVek
+ ...138: 00000000  		TRAP	0,Halt,0
+
+Symbol table:
+ For = #0000000000000108 (12)
+ Main = #000000000000012c (1)
+ MaxVek = #0000000000000100 (11)
+ OutBuf = #2000000000000000 (10)
+ Return = #0000000000000128 (13)
+ cmp = $004 (9)
+ cval = $006 (3)
+ i = $003 (2)
+ length = $002 (6)
+ max = $007 (4)
+ offset = $005 (8)
+ param = $001 (5)
+ raddr = $000 (7)

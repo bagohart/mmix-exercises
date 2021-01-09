@@ -1,0 +1,94 @@
+                   # long fib(long n) {
+                   #	if (n<2) return 1
+                   #	else return fib(n-2) + fib(n-1)
+                   # }
+                   # ohne Optimierung die stumpfe rekursive Lösung.
+                   # im Buch steht * statt + :)
+                   
+                   # todo: lokale scopes mit :
+                   
+($254=#30000000    BOS		GREG	#3000000000000000
+         00000000)
+($253)             SP		GREG	0
+                   
+($000)             n		IS		$0
+($001)             test	IS		$1
+($002)             f		IS		$2
+($003)             f1		IS		$3
+($004)             f2		IS		$4
+(0000000000000005) NumLoc	IS		5
+                   
+                   		LOC		#100
+($252=#00000000    		GREG	@
+         00000100)
+                   
+ ...100: 25fdfd28  Fibo	SUB		SP,SP,8*NumLoc
+ ...104: ad00fd00  		STO		$0,SP,0		# Rücksprungadresse und andere Register sichern
+ ...108: ad01fd08  		STO		$1,SP,8
+ ...10c: ad02fd10  		STO		$2,SP,16
+ ...110: ad03fd18  		STO		$3,SP,24
+ ...114: ad04fd20  		STO		$4,SP,32
+                   
+ ...118: 8d00fd28  		LDO		n,SP,8*NumLoc	# Parameter vom Stack auslesen
+                   
+ ...11c: 31010002  		CMP		test,n,2	# Rekursionsende?
+ ...120: 4401xxxx  		BP		test,Rek
+ ...124: e3020001  		SET		f,1
+ ...128: f0xxxxxx  		JMP		Ende
+                   
+ ...12c: 25000001  Rek		SUB		n,n,1	# f(n-1) berechnen
+ ...130: 25fdfd08  		SUB		SP,SP,8
+ ...134: ad00fd00  		STO		n,SP,0
+ ...138: 9f00fc00  		GO		$0,Fibo	# Achtung: überschreibt n. (könnte man ändern)
+ ...13c: 8d03fd00  		LDO		f1,SP,0
+ ...140: 21fdfd08  		ADD		SP,SP,8	# wegoptimierbar
+                   
+ ...144: 8d00fd28  		LDO		n,SP,8*NumLoc
+ ...148: 25000002  		SUB		n,n,2	# f(n-2) berechnen, ginge auch einfacher
+ ...14c: 25fdfd08  		SUB		SP,SP,8
+ ...150: ad00fd00  		STO		n,SP,0
+ ...154: 9f00fc00  		GO		$0,Fibo
+ ...158: 8d04fd00  		LDO		f2,SP,0
+ ...15c: 21fdfd08  		ADD		SP,SP,8
+                   
+ ...160: 20020304  		ADD		f,f1,f2
+ ...164: f0xxxxxx  		JMP		Ende	# kann man weglassen
+                   
+ ...168: ad02fd28  Ende	STO		f,SP,8*NumLoc	# Ergebnis auf den Stack schreiben (über Parameter)
+ ...16c: 8d00fd00  		LDO		$0,SP,0		# Register wiederherstellen
+ ...170: 8d01fd08  		LDO		$1,SP,8
+ ...174: 8d02fd10  		LDO		$2,SP,16
+ ...178: 8d03fd18  		LDO		$3,SP,24
+ ...17c: 8d04fd20  		LDO		$4,SP,32
+ ...180: 21fdfd28  		ADD		SP,SP,8*NumLoc
+ ...184: 9f000000  		GO		$0,$0,0
+                   
+                   					# 1,1,2,3,5,8,13,...
+ ...188: c1fdfe00  Main	SET		SP,BOS
+                   
+ ...18c: e3010007  		SET 	$1,7	# 5 müsste 5 ergeben. für 6 -> 8
+ ...190: 25fdfd08  		SUB		SP,SP,8
+ ...194: ad01fd00  		STO		$1,SP,0
+ ...198: e3010023  		SET		$1,#23	# zum testen, ob register restore tut
+ ...19c: e3020042  		SET		$2,#42
+                   
+ ...1a0: 9f00fc00  		GO		$0,Fibo
+                   
+ ...1a4: 8d01fd00  		LDO		$1,SP,0	# ergebnis vom stack lesen
+ ...1a8: 21fdfd08  		ADD		SP,SP,8	# stack verkleinern
+ ...1ac: 00000000  		TRAP	0,Halt,0
+                   		
+
+Symbol table:
+ BOS = $254 (2)
+ Ende = #0000000000000168 (12)
+ Fibo = #0000000000000100 (10)
+ Main = #0000000000000188 (1)
+ NumLoc = #0000000000000005 (9)
+ Rek = #000000000000012c (11)
+ SP = $253 (3)
+ f = $002 (6)
+ f1 = $003 (7)
+ f2 = $004 (8)
+ n = $000 (4)
+ test = $001 (5)

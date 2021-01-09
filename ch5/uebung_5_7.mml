@@ -1,0 +1,31 @@
+                   		LOC		Data_Segment
+($254=#20000000    		GREG	@
+         00000000)
+2000000000000000:  OutBuf	BYTE	0,0
+ ...000: 0000    
+                   
+                   		LOC		#100
+($253=#00000000    		GREG	@
+         00000100)
+                   
+                   		PREFIX	PutChr:
+                   
+0000000000000100:  :PutChr	LDA		$255,:OutBuf
+ ...100: 23fffe00
+ ...104: a101ff00  		STB		$1,$255,0
+ ...108: 00000701  		TRAP	0,:Fputs,:StdOut
+ ...10c: 9f000000  		GO		$0,$0,0
+                   
+                   		PREFIX	:
+                   
+(0000000000000061) Newline	IS		'a'
+                   
+ ...110: e3010061  Main	SET		$1,Newline
+ ...114: 9f00fd00  		GO		$0,PutChr
+ ...118: 00000000  		TRAP	0,Halt,0
+
+Symbol table:
+ Main = #0000000000000110 (1)
+ Newline = #0000000000000061 (6)
+ OutBuf = #2000000000000000 (2)
+ PutChr = #0000000000000100 (4)

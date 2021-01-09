@@ -1,0 +1,134 @@
+                   		LOC		Data_Segment
+($254=#20000000    		GREG	@
+         00000000)
+2000000000000000:  z0		BYTE	"zero",0
+ ...000: 7a65726f
+ ...004: 00      
+ ...005:   6f6e65  z1		BYTE	"one",0
+ ...008: 00      
+ ...009:   74776f  z2		BYTE	"two",0
+ ...00c: 00      
+ ...00d:   746872  z3		BYTE	"three",0
+ ...010: 656500  
+ ...013:       66  z4		BYTE	"four",0
+ ...014: 6f757200
+ ...018: 66697665  z5		BYTE	"five",0
+ ...01c: 00      
+ ...01d:   736978  z6		BYTE	"six",0
+ ...020: 00      
+ ...021:   736576  z7		BYTE	"seven",0
+ ...024: 656e00  
+ ...027:       65  z8		BYTE	"eight",0
+ ...028: 69676874
+ ...02c: 00      
+ ...02d:   6e696e  z9		BYTE	"nine",0
+ ...030: 6500    
+ ...032:     6875  hundred BYTE	"hundred",0
+ ...034: 6e647265
+ ...038: 6400    
+ ...03a:     0a00  CRLF	BYTE	#a,0
+ ...03c: 46616c73  nope	BYTE	"Falsche Zahl!",#a,0
+ ...040: 63686520
+ ...044: 5a61686c
+ ...048: 210a00  
+ ...04c: 03e7      limit	WYDE	999
+                   
+($000)             Adr		IS		$0
+($001)             Zahl	IS		$1
+($002)             test	IS		$2
+($003)             d1		IS		$3
+($004)             l		IS		$4
+                   
+                   		LOC		#100
+0000000000000100:  Main	SET		Zahl,909
+ ...100: e301038d
+ ...104: 8504fe4c  		LDW		l,limit
+ ...108: 30020104  		CMP		test,Zahl,l
+ ...10c: 4402xxxx  		BP		test,fehler
+ ...110: 31020164  		CMP		test,Zahl,100
+ ...114: 4002xxxx  		BN		test,Single
+ ...118: 1d030164  		DIV		d1,Zahl,100
+ ...11c: fe010006  		GET		Zahl,rR # für später
+ ...120: f400xxxx  		GETA	Adr,table0
+ ...124: 19030308  		MUL		d1,d1,8
+ ...128: 9e000003  		GO		Adr,Adr,d1
+ ...12c: 23fffe00  table0	LDA		$255,z0 # das hier wird nie erreicht. naja.
+ ...130: f0xxxxxx  		JMP		out0
+ ...134: 23fffe05  		LDA		$255,z1
+ ...138: f0xxxxxx  		JMP		out0
+ ...13c: 23fffe09  		LDA		$255,z2
+ ...140: f0xxxxxx  		JMP		out0
+ ...144: 23fffe0d  		LDA		$255,z3
+ ...148: f0xxxxxx  		JMP		out0
+ ...14c: 23fffe13  		LDA		$255,z4
+ ...150: f0xxxxxx  		JMP		out0
+ ...154: 23fffe18  		LDA		$255,z5
+ ...158: f0xxxxxx  		JMP		out0
+ ...15c: 23fffe1d  		LDA		$255,z6
+ ...160: f0xxxxxx  		JMP		out0
+ ...164: 23fffe21  		LDA		$255,z7
+ ...168: f0xxxxxx  		JMP		out0
+ ...16c: 23fffe27  		LDA		$255,z8
+ ...170: f0xxxxxx  		JMP		out0
+ ...174: 23fffe2d  		LDA		$255,z9
+ ...178: 00000701  out0	TRAP	0,Fputs,StdOut
+ ...17c: 23fffe32  		LDA		$255,hundred
+ ...180: 00000701  		TRAP	0,Fputs,StdOut
+                   #		TRAP	0,Halt,0 # todo
+ ...184: f400xxxx  Single	GETA	Adr,table
+ ...188: 19010108  		MUL		Zahl,Zahl,8
+ ...18c: 9e000001  		GO		Adr,Adr,Zahl
+ ...190: 23fffe00  table	LDA		$255,z0
+ ...194: f0xxxxxx  		JMP		out
+ ...198: 23fffe05  		LDA		$255,z1
+ ...19c: f0xxxxxx  		JMP		out
+ ...1a0: 23fffe09  		LDA		$255,z2
+ ...1a4: f0xxxxxx  		JMP		out
+ ...1a8: 23fffe0d  		LDA		$255,z3
+ ...1ac: f0xxxxxx  		JMP		out
+ ...1b0: 23fffe13  		LDA		$255,z4
+ ...1b4: f0xxxxxx  		JMP		out
+ ...1b8: 23fffe18  		LDA		$255,z5
+ ...1bc: f0xxxxxx  		JMP		out
+ ...1c0: 23fffe1d  		LDA		$255,z6
+ ...1c4: f0xxxxxx  		JMP		out
+ ...1c8: 23fffe21  		LDA		$255,z7
+ ...1cc: f0xxxxxx  		JMP		out
+ ...1d0: 23fffe27  		LDA		$255,z8
+ ...1d4: f0xxxxxx  		JMP		out
+ ...1d8: 23fffe2d  		LDA		$255,z9
+ ...1dc: 00000701  out		TRAP	0,Fputs,StdOut
+ ...1e0: 23fffe3a  		LDA		$255,CRLF
+ ...1e4: 00000701  		TRAP	0,Fputs,StdOut
+ ...1e8: 00000000  		TRAP	0,Halt,0
+ ...1ec: 23fffe3c  fehler	LDA		$255,nope
+ ...1f0: 00000701  		TRAP	0,Fputs,StdOut
+ ...1f4: 00000000  		TRAP	0,Halt,0
+
+Symbol table:
+ Adr = $000 (16)
+ CRLF = #200000000000003a (13)
+ Main = #0000000000000100 (1)
+ Single = #0000000000000184 (22)
+ Zahl = $001 (17)
+ d1 = $003 (19)
+ fehler = #00000000000001ec (21)
+ hundred = #2000000000000032 (12)
+ l = $004 (20)
+ limit = #200000000000004c (15)
+ nope = #200000000000003c (14)
+ out = #00000000000001dc (26)
+ out0 = #0000000000000178 (24)
+ table = #0000000000000190 (25)
+ table0 = #000000000000012c (23)
+ test = $002 (18)
+ z0 = #2000000000000000 (2)
+ z1 = #2000000000000005 (3)
+ z2 = #2000000000000009 (4)
+ z3 = #200000000000000d (5)
+ z4 = #2000000000000013 (6)
+ z5 = #2000000000000018 (7)
+ z6 = #200000000000001d (8)
+ z7 = #2000000000000021 (9)
+ z8 = #2000000000000027 (10)
+ z9 = #200000000000002d (11)

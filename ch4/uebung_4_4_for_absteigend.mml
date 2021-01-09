@@ -1,0 +1,23 @@
+($000)             nFak	IS		$0
+($001)             i		IS		$1
+($002)             test	IS		$2
+(0000000000000005) limit	IS		5
+                   
+                   # for(int i=limit; i >= 0; i--)
+                   
+ ...000: e3010005  Main	SET		i,limit
+ ...004: e3000001  		SET		nFak,1
+ ...008: 4201xxxx  For		BZ		i,End
+ ...00c: 1a000001  		MULU	nFak,nFak,i
+ ...010: 27010101  		SUBU	i,i,1
+ ...014: f1fffffd  		JMP		For
+ ...018: 00000000  End		TRAP	0,Halt,0
+
+Symbol table:
+ End = #0000000000000018 (6)
+ For = #0000000000000008 (7)
+ Main = #0000000000000000 (1)
+ i = $001 (3)
+ limit = #0000000000000005 (5)
+ nFak = $000 (2)
+ test = $002 (4)

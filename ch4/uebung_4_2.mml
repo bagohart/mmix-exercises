@@ -1,0 +1,21 @@
+($001)             n		IS		$1
+($002)             r		IS		$2
+($000)             zero	IS		$0
+                   
+                   		LOC		#100
+ ...100: e3010005  Main	SET		n,5
+ ...104: e3000000  		SET		zero,0
+ ...108: 4601xxxx  Start	BOD		n,Odd
+ ...10c: e3020001  		SET		r,1
+ ...110: f0xxxxxx  		JMP		Fertig
+ ...114: 25020001  Odd		SUB		r,zero,1
+ ...118: 00000000  Fertig	TRAP	0,Halt,0
+
+Symbol table:
+ Fertig = #0000000000000118 (7)
+ Main = #0000000000000100 (1)
+ Odd = #0000000000000114 (5)
+ Start = #0000000000000108 (6)
+ n = $001 (2)
+ r = $002 (3)
+ zero = $000 (4)

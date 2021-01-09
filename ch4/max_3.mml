@@ -1,0 +1,20 @@
+($000)             max		IS		$0
+($004)             test	IS		$4
+                   
+                   		LOC		#100
+ ...100: e301001b  Main	SET		$1,27
+ ...104: e302002c  		SET		$2,44
+ ...108: e303000d  		SET		$3,13
+ ...10c: c1000100  Start	SET		max,$1
+ ...110: 30040002  		CMP		test,max,$2
+ ...114: 60000402  		CSN		max,test,$2
+ ...118: 30040003  		CMP		test,max,$3
+ ...11c: 60000403  		CSN		max,test,$3
+ ...120: 00000000  Fertig	TRAP	0,Halt,0
+
+Symbol table:
+ Fertig = #0000000000000120 (5)
+ Main = #0000000000000100 (1)
+ Start = #000000000000010c (4)
+ max = $000 (2)
+ test = $004 (3)

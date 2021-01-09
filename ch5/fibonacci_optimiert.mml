@@ -1,0 +1,88 @@
+                   # long fib(long n) {
+                   #	if (n<2) return 1
+                   #	else return fib(n-2) + fib(n-1)
+                   # }
+                   # ohne Optimierung die stumpfe rekursive Lösung.
+                   # im Buch steht * statt + :)
+                   
+                   # leichte optimierung mit stack trickserei. (ob das was bringt?)
+                   # und register.
+                   
+                   # todo: lokale scopes mit :
+                   
+($254=#30000000    BOS		GREG	#3000000000000000
+         00000000)
+($253)             SP		GREG	0
+                   
+($000)             n		IS		$0
+($001)             f1		IS		$1
+($002)             f2		IS		$2
+(0000000000000003) NumLoc	IS		3
+                   
+                   		LOC		#100
+($252=#00000000    		GREG	@
+         00000100)
+                   
+ ...100: 25fdfd18  Fibo	SUB		SP,SP,8*NumLoc
+ ...104: ad00fd00  		STO		$0,SP,0		# Rücksprungadresse und andere Register sichern
+ ...108: ad01fd08  		STO		$1,SP,8
+ ...10c: ad02fd10  		STO		$2,SP,16
+                   		
+ ...110: 8d00fd18  		LDO		n,SP,8*NumLoc	# Parameter vom Stack auslesen
+                   
+ ...114: 31010002  		CMP		f1,n,2	# Rekursionsende?
+ ...118: 4401xxxx  		BP		f1,Rek
+ ...11c: e3000001  		SET		n,1
+ ...120: f0xxxxxx  		JMP		Ende
+                   
+ ...124: 25000001  Rek		SUB		n,n,1	# f(n-1) berechnen
+ ...128: 25fdfd08  		SUB		SP,SP,8
+ ...12c: ad00fd00  		STO		n,SP,0
+ ...130: 9f00fc00  		GO		$0,Fibo	# Achtung: überschreibt n. (könnte man ändern)
+ ...134: 8d01fd00  		LDO		f1,SP,0
+                   		
+ ...138: 8d00fd20  		LDO		n,SP,8*NumLoc+8 # achtung: optimiertrick
+ ...13c: 25000002  		SUB		n,n,2	# f(n-2) berechnen, ginge auch einfacher
+ ...140: ad00fd00  		STO		n,SP,0	# benutzt Rückgabeplatz von oben (trick)
+ ...144: 9f00fc00  		GO		$0,Fibo
+ ...148: 8d02fd00  		LDO		f2,SP,0
+ ...14c: 21fdfd08  		ADD		SP,SP,8
+                   
+ ...150: 20000102  		ADD		n,f1,f2
+                   
+ ...154: ad00fd18  Ende	STO		n,SP,8*NumLoc	# Ergebnis auf den Stack schreiben (über Parameter)
+ ...158: 8d00fd00  		LDO		$0,SP,0		# Register wiederherstellen
+ ...15c: 8d01fd08  		LDO		$1,SP,8
+ ...160: 8d02fd10  		LDO		$2,SP,16
+ ...164: 21fdfd18  		ADD		SP,SP,8*NumLoc
+ ...168: 9f000000  		GO		$0,$0,0
+                   
+                   					
+ ...16c: c1fdfe00  Main	SET		SP,BOS
+                   
+ ...170: e3010007  		SET 	$1,7	# 1,1,2,3,5,8,13,...
+ ...174: 25fdfd08  		SUB		SP,SP,8
+ ...178: ad01fd00  		STO		$1,SP,0
+ ...17c: e3010023  		SET		$1,#23	# zum testen, ob register restore tut
+ ...180: e3020042  		SET		$2,#42
+ ...184: e3030007  		SET		$3,#7
+ ...188: e3040101  		SET		$4,#101
+                   
+ ...18c: 9f00fc00  		GO		$0,Fibo
+                   
+ ...190: 8d01fd00  		LDO		$1,SP,0	# ergebnis vom stack lesen
+ ...194: 21fdfd08  		ADD		SP,SP,8	# stack verkleinern
+ ...198: 00000000  		TRAP	0,Halt,0
+                   		
+
+Symbol table:
+ BOS = $254 (2)
+ Ende = #0000000000000154 (10)
+ Fibo = #0000000000000100 (8)
+ Main = #000000000000016c (1)
+ NumLoc = #0000000000000003 (7)
+ Rek = #0000000000000124 (9)
+ SP = $253 (3)
+ f1 = $001 (5)
+ f2 = $002 (6)
+ n = $000 (4)

@@ -1,0 +1,26 @@
+                   		LOC		Data_Segment
+($254=#20000000    		GREG	@
+         00000000)
+2000000000000000:  Buffer	BYTE	0
+ ...000: 00      
+                   		LOC		Buffer+80	Puffer anlegen
+ ...050: 20000000  Arg		OCTA	Buffer
+ ...054: 00000000
+ ...058: 00000000  		OCTA	80			Puffergröße
+ ...05c: 00000050
+                   
+                   		LOC		#100
+0000000000000100:  Main	LDA		$255,Arg	$255 <- #2000000000000050
+ ...100: 23fffe50
+ ...104: 00000400  		TRAP	0,Fgets,StdIn	Einlesen
+                   #		TRAP	0,Halt,0
+                   
+                   # jetzt wieder ausgeben
+ ...108: 23fffe00  		LDA		$255,Buffer
+ ...10c: 00000701  		TRAP	0,Fputs,StdOut
+ ...110: 00000000  		TRAP	0,Halt,0
+
+Symbol table:
+ Arg = #2000000000000050 (3)
+ Buffer = #2000000000000000 (2)
+ Main = #0000000000000100 (1)

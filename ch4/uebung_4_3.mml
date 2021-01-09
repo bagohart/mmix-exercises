@@ -1,0 +1,21 @@
+($001)             sum		IS		$1
+($002)             i		IS		$2
+($003)             test	IS		$3
+(0000000000000005) limit	IS		5
+                   
+ ...000: e3010000  Main	SET		sum,0
+ ...004: e3020000  		SET		i,0
+ ...008: 23020201  Start	ADDU	i,i,1
+ ...00c: 22010102  		ADDU	sum,sum,i
+ ...010: 27030205  		SUBU	test,i,limit
+ ...014: 5b03fffd  		PBNZ	test,Start
+ ...018: 00000000  Fertig	TRAP	0,Halt,0
+
+Symbol table:
+ Fertig = #0000000000000018 (7)
+ Main = #0000000000000000 (1)
+ Start = #0000000000000008 (6)
+ i = $002 (3)
+ limit = #0000000000000005 (5)
+ sum = $001 (2)
+ test = $003 (4)

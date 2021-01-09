@@ -1,0 +1,42 @@
+                   # Aus Fragen zur Lernkontrolle:
+                   # Wie können Sie ein Bitmuster rotieren,
+                   # d.h. die links (rechts) rausgeschobenen
+                   # Bits wieder hereinziehen, anstatt mit
+                   # Nullen aufzufüllen?
+                   
+                   # Lösungsidee:
+                   # rauszuschiebende bits erst nach rechts schieben,
+                   # separat abspeichern, am ende draufaddieren
+                   
+                   # links rausschieben implementiert
+                   
+                   		@Data_Segment
+(0000000000000008) anz		IS		8
+($001)             val		IS		$1
+($002)             numBit	IS		$2
+($003)             raus	IS		$3
+($004)             rechts	IS		$4
+($005)             shval	IS		$5
+                   
+ ...000: e3020040  Main	SET		numBit,64
+ ...004: e3017788  		SETL	val,#7788
+ ...008: e6015566  		INCML	val,#5566
+ ...00c: e5013344  		INCMH	val,#3344
+ ...010: e4011122  		INCH	val,#1122
+                   
+ ...014: 25040208  		SUB		rechts,numBit,anz
+ ...018: 3c030104  		SR		raus,val,rechts
+ ...01c: 39050108  		SL		shval,val,anz
+ ...020: 20050503  		ADD		shval,shval,raus
+ ...024: 00000000  		TRAP	0,Halt,0
+                   		
+                   		
+
+Symbol table:
+ Main = #0000000000000000 (1)
+ anz = #0000000000000008 (2)
+ numBit = $002 (4)
+ raus = $003 (5)
+ rechts = $004 (6)
+ shval = $005 (7)
+ val = $001 (3)

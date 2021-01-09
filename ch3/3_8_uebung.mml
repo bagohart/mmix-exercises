@@ -1,0 +1,27 @@
+                   		LOC Data_Segment
+($254=#20000000    		GREG @
+         00000000)
+2000000000000000:  X1		OCTA	#7FFFFFFFFFFFFFFF
+ ...000: 7fffffff
+ ...004: ffffffff
+ ...008: 7fffffff  X2		OCTA	#7FFFFFFFFFFFFFFF
+ ...00c: ffffffff
+ ...010: ffffffff  X3		OCTA	#FFFFFFFFFFFFFFFF
+ ...014: ffffffff
+ ...018: ffffffff  X4		OCTA	#FFFFFFFFFFFFFFFF
+ ...01c: ffffffff
+                   
+                   
+ ...020: 8d01fe00  Main	LDO		$1,X1
+ ...024: 8d02fe08  		LDO		$2,X2
+ ...028: 20030102  		ADD		$3,$1,$2
+ ...02c: 8f01fe10  		LDOU	$1,X3
+ ...030: 8f02fe18  		LDOU	$2,X4
+ ...034: 22030102  		ADDU	$3,$1,$2
+
+Symbol table:
+ Main = #2000000000000020 (1)
+ X1 = #2000000000000000 (2)
+ X2 = #2000000000000008 (3)
+ X3 = #2000000000000010 (4)
+ X4 = #2000000000000018 (5)

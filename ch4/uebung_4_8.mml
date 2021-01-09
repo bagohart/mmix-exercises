@@ -1,0 +1,55 @@
+                   # Primfaktoren einer Zahl finden. etwa so:
+                   # for (i = 1; i<sqrt(n); i++) {
+                   #	if i is prim
+                   #		if n teilt i
+                   #			add n
+                   # aber sqrt kommt erst später, also einfach i^2<n testen. ist halt langsamer.
+                   
+                   		LOC		Data_Segment
+($254=#20000000    		GREG	@
+         00000000)
+2000000000000000:  RES		OCTA	0
+ ...000: 00000000
+ ...004: 00000000
+                   		LOC		Data_Segment+8*100 # Raum für 100 Primfaktoren reicht hoffentlich :)
+                   
+($000)             n		IS		$0
+($001)             i		IS		$1
+($002)             test	IS		$2
+($003)             rz		IS		$3
+($004)             ra		IS		$4
+                   
+                   		LOC		#100
+0000000000000100:  Main	SET		n,12
+ ...100: e300000c
+ ...104: e3010001  		SET		i,1
+ ...108: e3030000  		SET		rz,0
+****************** 		SET		ra,RES
+************ warning: YZ field doesn't fit in two bytes
+ ...10c: e3040000
+ ...110: 18020101  For		MUL		test,i,i
+ ...114: 30020100  		CMP		test,i,n
+ ...118: 5002xxxx  		PBN		test,Endfor
+ ...11c: 1c020001  		DIV		test,n,i
+ ...120: fe020006  		GET		test,rR
+ ...124: 5b02fffb  		PBNZ	test,For
+                   		
+ ...128: 20020104  		ADD		test,i,ra
+ ...12c: ad010200  		STO		i,test
+                   		
+                   		
+****************** Endfor
+********** error: opcode syntax error at `,'!
+
+Symbol table:
+********** error: undefined symbol: Endfor!
+ Endfor = ? (9)
+ For = #0000000000000110 (8)
+ Main = #0000000000000100 (1)
+ RES = #2000000000000000 (2)
+ i = $001 (4)
+ n = $000 (3)
+ ra = $004 (7)
+ rz = $003 (6)
+ test = $002 (5)
+********** error: (3 errors were found.)!
